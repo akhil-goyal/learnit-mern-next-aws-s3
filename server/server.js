@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import mongoose from 'mongoose';
 import { readdirSync } from 'fs';
 
 // Morgan has some issue with import syntax.
@@ -8,6 +9,19 @@ require('dotenv').config();
 
 // Express Application
 const app = express();
+
+// Database Connection
+mongoose
+    .connect(process.env.DATABASE, {
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true,
+        useCreateIndex: true
+    })
+    .then(() => {
+        console.log(`MongoDB connected!`);
+    })
+    .catch((error) => console.log('Error while connecting to MongoDB : ', error));
 
 // Middlewares
 app.use(cors());
