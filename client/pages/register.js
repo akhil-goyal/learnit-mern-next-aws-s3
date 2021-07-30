@@ -6,9 +6,9 @@ import Link from 'next/link';
 
 const Register = () => {
 
-    const [name, setName] = useState('akhil');
-    const [email, setEmail] = useState('akhil@hh.com');
-    const [password, setPassword] = useState('akhil123');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
