@@ -20,7 +20,7 @@ const Register = () => {
 
     useEffect(() => {
 
-        if (user !== null) router.push('/')
+        if (user !== null) router.push('/');
 
     }, [user]);
 
