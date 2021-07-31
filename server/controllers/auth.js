@@ -98,3 +98,9 @@ export const currentUser = async (req, res) => {
     }
 
 }
+
+export const sendTestEmail = async (req, res) => {
+
+    res.json({ ok: true });
+
+}
