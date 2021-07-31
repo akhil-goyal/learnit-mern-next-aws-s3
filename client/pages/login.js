@@ -1,14 +1,20 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { SyncOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import { Context } from '../context';
+import { useRouter } from 'next/router';
 
 const Login = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const { state, dispatch } = useContext(Context);
+
+    const router = useRouter();
 
     const handleSubmit = async (e) => {
 
@@ -23,7 +29,16 @@ const Login = () => {
             });
 
             console.log(data);
-            setLoading(false);
+            dispatch({
+                type: 'LOGIN',
+                payload: data
+            });
+
+            window.localStorage.setItem('user', JSON.stringify(data));
+
+            router.push('/');
+
+            // setLoading(false);
 
         } catch (err) {
             toast(err.response.data);
@@ -58,7 +73,7 @@ const Login = () => {
                         onChange={e => setPassword(e.target.value)}
                     />
 
-                    <button disabled={ !email || !password || loading} type="submit" className="btn btn-block btn-primary">
+                    <button disabled={!email || !password || loading} type="submit" className="btn btn-block btn-primary">
                         {
                             loading ? <SyncOutlined spin /> : 'Submit'
                         }
