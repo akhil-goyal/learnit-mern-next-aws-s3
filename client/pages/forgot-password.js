@@ -23,7 +23,7 @@ const ForgotPassword = () => {
         if (user !== null) {
             router.push('/');
         }
-    }, []);
+    }, [user]);
 
     const handleSubmit = async (e) => {
 

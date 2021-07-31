@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { Menu } from 'antd';
 import Link from 'next/link';
-import { AppstoreOutlined, CoffeeOutlined, LoginOutlined, UserAddOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, CoffeeOutlined, LoginOutlined, UserAddOutlined, CarryOutOutlined, TeamOutlined } from '@ant-design/icons';
 import { Context } from '../context';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -54,6 +54,18 @@ const TopNav = () => {
                             <Link href="/register"><a className="typewriter">Register</a></Link>
                         </Item>
                     </>
+                )
+            }
+
+            {
+                user && user.role && user.role.includes('Instructor') ? (
+                    <Item key="/instructor/course/create" onClick={e => setCurrent(e.key)} icon={<CarryOutOutlined />}>
+                        <Link href="/instructor/course/create"><a className="typewriter">Create Course</a></Link>
+                    </Item>
+                ) : (
+                    <Item key="/user/become-instructor" onClick={e => setCurrent(e.key)} icon={<TeamOutlined />}>
+                        <Link href="/user/become-instructor"><a className="typewriter">Become an Instructor</a></Link>
+                    </Item>
                 )
             }
 
