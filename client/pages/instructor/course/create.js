@@ -13,8 +13,9 @@ const CreateCourse = () => {
         uploading: false,
         paid: true,
         loading: false,
-        imagePreview: ''
     });
+
+    const [preview, setPreview] = useState('');
 
     const handleChange = (e) => {
 
@@ -22,7 +23,11 @@ const CreateCourse = () => {
 
     }
 
-    const handleImage = () => {
+    const handleImage = (e) => {
+
+        setPreview(window.URL.createObjectURL(e.target.files[0]));
+
+
 
     }
 
@@ -44,6 +49,7 @@ const CreateCourse = () => {
                     handleChange={handleChange}
                     values={values}
                     setValues={setValues}
+                    preview={preview}
                 />
             </div>
 

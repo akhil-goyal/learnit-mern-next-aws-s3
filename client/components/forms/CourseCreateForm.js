@@ -1,4 +1,4 @@
-import { Select, Button } from 'antd';
+import { Select, Button, Avatar } from 'antd';
 
 const { Option } = Select;
 
@@ -7,7 +7,8 @@ const CourseCreateForm = ({
     handleChange,
     handleSubmit,
     values,
-    setValues
+    setValues,
+    preview
 }) => {
 
     const children = [];
@@ -100,6 +101,9 @@ const CourseCreateForm = ({
                             </label>
                         </div>
                     </div>
+
+                    {preview && (<Avatar width="200" src={preview} />)}
+
                 </div>
 
                 <div className="row">
