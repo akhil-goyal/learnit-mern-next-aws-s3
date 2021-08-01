@@ -57,7 +57,26 @@ const CreateCourse = () => {
 
     }
 
-    const handleSubmit = (e) => {
+    const handleImageRemove = async () => {
+
+        try {
+
+            setValues({ ...values, loading: true });
+
+            const res = await axios.post(`/api/course/remove-image`, { image });
+
+            setImage({});
+            setPreview('');
+            setUploadButtonText('Upload Image');
+            setValues({ ...values, loading: false });
+
+        } catch (err) {
+            setValues({ ...values, loading: false });
+            toast('Image Upload Failed! Try again...');
+        }
+    }
+
+    const handleSubmit = async (e) => {
 
         e.preventDefault();
 
@@ -77,6 +96,7 @@ const CreateCourse = () => {
                     setValues={setValues}
                     preview={preview}
                     uploadButtonText={uploadButtonText}
+                    handleImageRemove={handleImageRemove}
                 />
             </div>
 
