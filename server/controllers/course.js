@@ -37,13 +37,42 @@ export const uploadImage = async (req, res) => {
 
         // Upload to S3
         S3.upload(params, (err, data) => {
-            if(err) {
+            if (err) {
                 console.log(err);
                 return res.sendStatus(400);
             }
             console.log(data);
             res.send(data);
         })
+
+    } catch (err) {
+        console.log(err);
+    }
+
+}
+
+export const removeImage = async (req, res) => {
+
+    try {
+
+        const { image } = req.body;
+
+        // Image parameters
+        const params = {
+            Bucket: image.Bucket,
+            Key: image.Key
+        }
+
+        // Sending deletion request to S3
+        S3.deleteObject(params, (err, data) => {
+
+            if (err) {
+                console.log(err);
+                res.sendStatus(400);
+            }
+
+            res.send({ ok: true });
+        });
 
     } catch (err) {
         console.log(err);
