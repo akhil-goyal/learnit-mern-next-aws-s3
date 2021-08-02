@@ -31,7 +31,7 @@ const InstructorIndex = () => {
                             <div className="media-body pt-2">
                                 <div className="row">
                                     <div className="col">
-                                        <Link className="pointer" href={`/instructor/course/view/${course._id}`}>
+                                        <Link className="pointer" href={`/instructor/course/view/${course.slug}`}>
                                             <a className="mt-2 text-primary"><h5 className="pt-2">{course.name}</h5></a>
                                         </Link>
 
