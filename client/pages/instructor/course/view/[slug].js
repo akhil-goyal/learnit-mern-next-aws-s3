@@ -5,11 +5,19 @@ import InstructorRoute from './../../../../components/routes/InstructorRoute';
 import { Avatar, Tooltip, Button, Modal } from 'antd';
 import { EditOutlined, CheckOutlined, UploadOutlined } from '@ant-design/icons';
 import ReactMarkdown from 'react-markdown';
+import AddLessonForm from './../../../../components/forms/AddLessonForm';
 
 const CourseView = () => {
 
     const [course, setCourse] = useState({});
     const [visible, setVisible] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [values, setValues] = useState({
+        title: '',
+        content: '',
+        video: ''
+    });
+
 
     const router = useRouter();
 
@@ -27,6 +35,13 @@ const CourseView = () => {
         console.log(slug);
         loadCourse();
     }, [slug]);
+
+    const handleAddLesson = e => {
+
+        e.preventDefault();
+        console.log(values);
+
+    }
 
     return (
         <InstructorRoute>
@@ -76,10 +91,10 @@ const CourseView = () => {
 
                     </div>
 
-                    <br/>
+                    <br />
 
                     <Modal footer={null} onCancel={() => setVisible(false)} visible={visible} centered title="+ Add Lesson">
-                        Add lesson component
+                        <AddLessonForm uploading={uploading} values={values} setValues={setValues} handleAddLesson={handleAddLesson} />
                     </Modal>
 
                 </div>}
