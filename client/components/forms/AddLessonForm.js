@@ -1,6 +1,16 @@
-import { Button } from 'antd';
+import { Button, Progress, Tooltip } from 'antd';
+import { CloseCircleFilled } from '@ant-design/icons';
 
-const AddLessonForm = ({ uploading, values, setValues, handleAddLesson, uploadButtonText, handleVideo }) => {
+const AddLessonForm = ({
+    uploading,
+    values,
+    setValues,
+    handleAddLesson,
+    uploadButtonText,
+    handleVideo,
+    progress,
+    handleVideoRemove
+}) => {
 
     return (
         <div className="container pt-3">
@@ -24,10 +34,36 @@ const AddLessonForm = ({ uploading, values, setValues, handleAddLesson, uploadBu
                     placeholder="Content"
                 />
 
-                <label className="btn btn-dark btn-block text-left mt-3">
-                    {uploadButtonText}
-                    <input onChange={handleVideo} type="file" accept="video/*" hidden />
-                </label>
+                {
+                    <div className="d-flex justify-content-center">
+
+                        <label className="btn btn-dark btn-block text-left mt-3">
+                            {uploadButtonText}
+                            <input onChange={handleVideo} type="file" accept="video/*" hidden />
+                        </label>
+
+                        {
+                            !uploading && values.video.Location && (
+                                <Tooltip title="Remove">
+                                    <span className="pt-1 pl-3" onClick={handleVideoRemove}>
+                                        <CloseCircleFilled className="text-danger d-flex justify-content-center pt-4 pointer" />
+                                    </span>
+                                </Tooltip>
+                            )
+                        }
+
+                    </div>
+                }
+
+                {
+                    progress > 0 && (
+                        <Progress
+                            className="d-flex justify-content-center pt-2"
+                            percent={progress}
+                            steps={10}
+                        />
+                    )
+                }
 
                 <Button
                     onClick={handleAddLesson}
