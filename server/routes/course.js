@@ -13,7 +13,7 @@ router.post('/course/upload-image', uploadImage);
 router.post('/course/remove-image', removeImage);
 router.post('/course', requireSignIn, isInstructor, create);
 router.get('/course/:slug', read);
-router.post('/course/video-upload', requireSignIn, formidable(), uploadVideo);
-router.post('/course/video-remove', requireSignIn, removeVideo);
+router.post('/course/video-upload/:instructorId', requireSignIn, formidable(), uploadVideo);
+router.post('/course/video-remove/:instructorId', requireSignIn, removeVideo);
 
 module.exports = router;

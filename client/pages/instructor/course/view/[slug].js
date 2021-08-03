@@ -48,7 +48,7 @@ const CourseView = () => {
 
         try {
             setUploading(true);
-            const { data } = await axios.post(`/api/course/video-remove`, values.video);
+            const { data } = await axios.post(`/api/course/video-remove/${course.instructor._id}`, values.video);
             console.log(data);
             setValues({ ...values, video: {} });
             setUploading(false);
@@ -63,6 +63,8 @@ const CourseView = () => {
 
     const handleVideo = async (e) => {
 
+
+
         try {
 
             const file = e.target.files[0];
@@ -74,7 +76,7 @@ const CourseView = () => {
 
             // Save Progress bar & send video as form data
             // to server-side.
-            const { } = await axios.post(`/api/course/video-upload`, videoData, {
+            const { } = await axios.post(`/api/course/video-upload/${course.instructor._id}`, videoData, {
                 onUploadProgress: (e) => {
                     setProgress(Math.round((100 * e.loaded) / e.total))
                 }
