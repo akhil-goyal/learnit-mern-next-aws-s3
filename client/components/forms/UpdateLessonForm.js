@@ -1,5 +1,6 @@
-import { Button, Progress, Tooltip } from 'antd';
+import { Button, Progress, Switch } from 'antd';
 import { CloseCircleFilled } from '@ant-design/icons';
+import ReactPlayer from 'react-player';
 
 const UpdateLessonForm = ({
     current,
@@ -32,20 +33,25 @@ const UpdateLessonForm = ({
                 />
 
                 {
-                    <div className="d-flex justify-content-center">
+                    <div>
+
+                        {
+                            !uploading && current.video && current.video.Location && (
+                                <div className="pt-2 d-flex justify-content-center">
+                                    <ReactPlayer
+                                        url={current.video.Location}
+                                        width="410px"
+                                        height="240px"
+                                        controls
+                                    />
+                                </div>
+                            )
+                        }
 
                         <label className="btn btn-dark btn-block text-left mt-3">
                             {uploadVideoButtonText}
                             <input onChange={handleVideo} type="file" accept="video/*" hidden />
                         </label>
-
-                        {
-                            !uploading && current.video && current.video.Location && (
-                                <div className="pt-2 d-flex justify-content-center">
-                                    Show Video Player
-                                </div>
-                            )
-                        }
 
                     </div>
                 }
@@ -64,6 +70,13 @@ const UpdateLessonForm = ({
                     <span className="pt-3 badge">
                         Preview
                     </span>
+                    <Switch
+                        className="float-right mt-2"
+                        disabled={uploading}
+                        defaultChecked={current.free_preview}
+                        name="fee_preview"
+                        onChange={v => setCurrent({ ...current, free_preview: v })}
+                    />
                 </div>
 
                 <Button
