@@ -238,3 +238,28 @@ export const update = async (req, res) => {
     }
 
 }
+
+export const removeLesson = async (req, res) => {
+
+    try {
+
+        const { slug, lessonId } = req.params;
+
+        const course = await Course.findOne({ slug }).exec();
+
+        if (req.user._id != course.instructor) {
+            return res.status(400).send('Unauthorized!');
+        }
+
+        const deletedCourse = await Course.findByIdAndUpdate(course._id, {
+            $pull: { lessons: { _id: lessonId } }
+        }).exec();
+
+        res.json({ ok: true });
+
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send(err.message);
+    }
+
+}

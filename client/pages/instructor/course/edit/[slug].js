@@ -156,7 +156,7 @@ const CreateEdit = () => {
         setValues({ ...values, lessons: allLessons });
 
         // Send to server-side
-        const { data } = await axios.put(`/api/course/${removed[0]._id}`);
+        const { data } = await axios.put(`/api/course/${slug}/${removed[0]._id}`);
 
         console.log(data);
 
