@@ -171,12 +171,48 @@ const CreateEdit = () => {
 
     }
 
-    const handleVideo = () => {
+    const handleVideo = async () => {
+
+        if (current.video && current.video.Location) {
+            const res = await axios.post(`/api/course/video-remove/${values.instructor._id}`, current.video);
+        }
+
+        const file = e.target.files[0];
+
+        setUploadVideoButtonText(file.name);
+        setUploading(true);
+
+        const videoData = new FormData();
+
+        videoData.append('video', file);
+        videoData.append('courseId', values._id);
+
+        const { data } = await axios.post(`/api/course/video-upload/${values.instructor._id}`, videoData, {
+            onUploadProgress: (e) => setProgress(Math.round((100 * e.loaded) / e.total))
+        });
+
+        setCurrent({ ...current, video: data });
+        setUploading(false);
 
     }
 
-    const handleUpdateLesson = () => {
+    const handleUpdateLesson = async (e) => {
 
+        e.preventDefault();
+
+        const { data } = await axios.put(`/api/course/lesson/${slug}/${current._id}`, current);
+
+        setVisible(false);
+        setUploadVideoButtonText('Upload Video!');
+
+        // Update UI
+        if (data.ok) {
+            let arr = values.lessons;
+            const index = arr.findIndex((el) => el._id === current._id);
+            arr[index] = current;
+            setValues({ ...values, lessons: arr });
+            toast('Lesson Updated!');
+        }
     }
 
     return (
