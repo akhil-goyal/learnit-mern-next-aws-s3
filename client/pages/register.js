@@ -1,107 +1,101 @@
-import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { SyncOutlined } from '@ant-design/icons';
-import Link from 'next/link';
-import { Context } from '../context';
-import { useRouter } from 'next/router';
+import { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { SyncOutlined } from "@ant-design/icons";
+import Link from "next/link";
+import { Context } from "../context";
+import { useRouter } from "next/router";
+import user from "../../server/models/user";
 
 const Register = () => {
+  const [name, setName] = useState("Ryan");
+  const [email, setEmail] = useState("ryan@gmail.com");
+  const [password, setPassword] = useState("rrrrrr");
+  const [loading, setLoading] = useState(false);
 
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
+  const {
+    state: { user },
+  } = useContext(Context);
 
-    const { state } = useContext(Context);
-    const { user } = state;
+  const router = useRouter();
 
-    const router = useRouter();
+  useEffect(() => {
+    if (user !== null) router.push("/");
+  }, [user]);
 
-    useEffect(() => {
-
-        if (user !== null) router.push('/');
-
-    }, [user]);
-
-    const handleSubmit = async (e) => {
-
-        e.preventDefault();
-
-        try {
-
-            setLoading(true);
-
-            const { data } = await axios.post(`/api/register`, {
-                name, email, password
-            });
-
-            toast('Registered Successfully! Please Login.');
-
-            setName('');
-            setEmail('');
-            setPassword('');
-            setLoading(false);
-
-        } catch (err) {
-            toast(err.response.data);
-            setLoading(false);
-        }
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // console.table({ name, email, password });
+    try {
+      setLoading(true);
+      const { data } = await axios.post(`/api/register`, {
+        name,
+        email,
+        password,
+      });
+      // console.log("REGISTER RESPONSE", data);
+      toast("Registration successful. Please login.");
+      setName("");
+      setEmail("");
+      setPassword("");
+      setLoading(false);
+    } catch (err) {
+      toast(err.response.data);
+      setLoading(false);
     }
+  };
 
-    return (
-        <>
-            <h1 className="jumbotron text-center bg-primary square">Register</h1>
+  return (
+    <>
+      <h1 className="jumbotron text-center bg-primary square">Register</h1>
 
-            <div className="container col-md-4 offset-md-4 pb-5">
+      <div className="container col-md-4 offset-md-4 pb-5">
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            className="form-control mb-4 p-4"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter name"
+            required
+          />
 
-                <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            className="form-control mb-4 p-4"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter email"
+            required
+          />
 
-                    <input
-                        required
-                        className="form-control mb-4 p-4"
-                        placeholder="Enter Name"
-                        type="text"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                    />
+          <input
+            type="password"
+            className="form-control mb-4 p-4"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter password"
+            required
+          />
 
-                    <input
-                        required
-                        className="form-control mb-4 p-4"
-                        placeholder="Enter Email"
-                        type="email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                    />
+          <button
+            type="submit"
+            className="btn btn-block btn-primary"
+            disabled={!name || !email || !password || loading}
+          >
+            {loading ? <SyncOutlined spin /> : "Submit"}
+          </button>
+        </form>
 
-                    <input
-                        required
-                        className="form-control mb-4 p-4"
-                        placeholder="Enter Password"
-                        type="password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                    />
-
-                    <button disabled={!name || !email || !password || loading} type="submit" className="btn btn-block btn-primary">
-                        {
-                            loading ? <SyncOutlined spin /> : 'Submit'
-                        }
-                    </button>
-
-                </form>
-
-                <p className="text-center p-3">
-                    Already Registered? {" "}
-                    <Link href="/login"><a>Login</a></Link>
-                </p>
-
-            </div>
-
-        </>
-    )
-}
+        <p className="text-center p-3">
+          Already registered?{" "}
+          <Link href="/login">
+            <a>Login</a>
+          </Link>
+        </p>
+      </div>
+    </>
+  );
+};
 
 export default Register;

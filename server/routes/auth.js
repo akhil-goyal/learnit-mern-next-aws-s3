@@ -1,19 +1,25 @@
-import express from 'express';
+import express from "express";
 
 const router = express.Router();
 
-// Middleware
-import { requireSignIn } from './../middlewares';
+// middleware
+import { requireSignin } from "../middlewares";
 
-// Controllers
-import { register, login, logout, currentUser, sendTestEmail, forgotPassword, resetPassword } from './../controllers/auth';
+// controllers
+import {
+  register,
+  login,
+  logout,
+  currentUser,
+  forgotPassword,
+  resetPassword,
+} from "../controllers/auth";
 
-router.post('/register', register);
-router.post('/login', login);
-router.get('/logout', logout);
-router.get('/current-user', requireSignIn, currentUser);
-router.get('/send-email', sendTestEmail);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password', resetPassword);    
+router.post("/register", register);
+router.post("/login", login);
+router.get("/logout", logout);
+router.get("/current-user", requireSignin, currentUser);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 module.exports = router;

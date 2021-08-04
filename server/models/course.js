@@ -1,75 +1,73 @@
-import mongoose from 'mongoose';
-
-const { Schema } = mongoose;
+import mongoose from "mongoose";
 
 const { ObjectId } = mongoose.Schema;
 
-const lessonSchema = new mongoose.Schema({
-
+const lessonSchema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        trim: true,
-        minlength: 3,
-        maxlength: 320,
-        required: true
+      type: String,
+      trim: true,
+      minlength: 3,
+      maxlength: 320,
+      required: true,
     },
     slug: {
-        type: String,
-        lowercase: true
+      type: String,
+      lowercase: true,
     },
     content: {
-        type: {},
-        minlength: 200,
+      type: {},
+      minlength: 200,
     },
     video: {},
     free_preview: {
-        type: Boolean,
-        default: false
-    }
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
 
-}, { timestamps: true });
-
-const courseSchema = new mongoose.Schema({
-
+const courseSchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        trim: true,
-        minlength: 3,
-        maxlength: 320,
-        required: true
+      type: String,
+      trim: true,
+      minlength: 3,
+      maxlength: 320,
+      required: true,
     },
     slug: {
-        type: String,
-        lowercase: true
+      type: String,
+      lowercase: true,
     },
     description: {
-        type: {},
-        minlength: 200,
-        required: true
+      type: {},
+      minlength: 200,
+      required: true,
     },
     price: {
-        type: Number,
-        default: 9.99
+      type: Number,
+      default: 9.99,
     },
-    image: {
-        type: {},
-    },
+    image: {},
     category: String,
     published: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
     paid: {
-        type: Boolean,
-        default: true
+      type: Boolean,
+      default: true,
     },
     instructor: {
-        type: ObjectId,
-        ref: "User",
-        required: true
+      type: ObjectId,
+      ref: "User",
+      required: true,
     },
-    lessons: [lessonSchema]
+    lessons: [lessonSchema],
+  },
+  { timestamps: true }
+);
 
-}, { timestamps: true });
-
-export default mongoose.model('Course', courseSchema);
+export default mongoose.model("Course", courseSchema);

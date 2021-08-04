@@ -1,16 +1,35 @@
-import express from 'express';
+import express from "express";
 
 const router = express.Router();
 
-// Middleware
-import { requireSignIn } from './../middlewares';
+// middleware
+import { requireSignin } from "../middlewares";
 
-// Controllers
-import { makeInstructor, getAccountStatus, currentInstructor, instructorCourses } from './../controllers/instructor';
+// controllers
+import {
+  makeInstructor,
+  getAccountStatus,
+  currentInstructor,
+  instructorCourses,
+  studentCount,
+  instructorBalance,
+  instructorPayoutSettings,
+} from "../controllers/instructor";
 
-router.post('/make-instructor', requireSignIn, makeInstructor);
-router.post('/get-account-status', requireSignIn, getAccountStatus);
-router.get('/current-instructor', requireSignIn, currentInstructor);
-router.get('/instructor-courses', requireSignIn, instructorCourses);
+router.post("/make-instructor", requireSignin, makeInstructor);
+router.post("/get-account-status", requireSignin, getAccountStatus);
+router.get("/current-instructor", requireSignin, currentInstructor);
+
+router.get("/instructor-courses", requireSignin, instructorCourses);
+
+router.post("/instructor/student-count", requireSignin, studentCount);
+
+router.get("/instructor/balance", requireSignin, instructorBalance);
+
+router.get(
+  "/instructor/payout-settings",
+  requireSignin,
+  instructorPayoutSettings
+);
 
 module.exports = router;

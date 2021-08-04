@@ -1,105 +1,103 @@
-import { useState, useContext, useEffect } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { SyncOutlined } from '@ant-design/icons';
-import Link from 'next/link';
-import { Context } from '../context';
-import { useRouter } from 'next/router';
+import { useState, useContext, useEffect } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { SyncOutlined } from "@ant-design/icons";
+import Link from "next/link";
+import { Context } from "../context";
+import { useRouter } from "next/router";
 
 const Login = () => {
+  const [email, setEmail] = useState("ryanstripeseller@gmail.com");
+  const [password, setPassword] = useState("rrrrrr");
+  const [loading, setLoading] = useState(false);
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
+  // state
+  const {
+    state: { user },
+    dispatch,
+  } = useContext(Context);
+  // const { user } = state;
 
-    const { state, dispatch } = useContext(Context);
-    const { user } = state;
+  // router
+  const router = useRouter();
 
-    const router = useRouter();
+  useEffect(() => {
+    if (user !== null) router.push("/");
+  }, [user]);
 
-    useEffect(() => {
-
-        if (user !== null) router.push('/');
-
-    }, [user]);
-
-    const handleSubmit = async (e) => {
-
-        e.preventDefault();
-
-        try {
-
-            setLoading(true);
-
-            const { data } = await axios.post(`/api/login`, {
-                email, password
-            });
-
-            dispatch({
-                type: 'LOGIN',
-                payload: data
-            });
-
-            window.localStorage.setItem('user', JSON.stringify(data));
-
-            router.push('/user');
-
-            // setLoading(false);
-
-        } catch (err) {
-            toast(err.response.data);
-            setLoading(false);
-        }
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // console.table({ name, email, password });
+    try {
+      setLoading(true);
+      const { data } = await axios.post(`/api/login`, {
+        email,
+        password,
+      });
+      // console.log("LOGIN RESPONSE", data);
+      dispatch({
+        type: "LOGIN",
+        payload: data,
+      });
+      // save in local storage
+      window.localStorage.setItem("user", JSON.stringify(data));
+      // redirect
+      router.push("/user");
+      // setLoading(false);
+    } catch (err) {
+      toast(err.response.data);
+      setLoading(false);
     }
+  };
 
-    return (
-        <>
-            <h1 className="jumbotron text-center bg-primary square">Login</h1>
+  return (
+    <>
+      <h1 className="jumbotron text-center bg-primary square">Login</h1>
 
-            <div className="container col-md-4 offset-md-4 pb-5">
+      <div className="container col-md-4 offset-md-4 pb-5">
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            className="form-control mb-4 p-4"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter email"
+            required
+          />
 
-                <form onSubmit={handleSubmit}>
+          <input
+            type="password"
+            className="form-control mb-4 p-4"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter password"
+            required
+          />
 
-                    <input
-                        required
-                        className="form-control mb-4 p-4"
-                        placeholder="Enter Email"
-                        type="email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                    />
+          <button
+            type="submit"
+            className="btn btn-block btn-primary"
+            disabled={!email || !password || loading}
+          >
+            {loading ? <SyncOutlined spin /> : "Submit"}
+          </button>
+        </form>
 
-                    <input
-                        required
-                        className="form-control mb-4 p-4"
-                        placeholder="Enter Password"
-                        type="password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                    />
+        <p className="text-center pt-3">
+          Not yet registered?{" "}
+          <Link href="/register">
+            <a>Register</a>
+          </Link>
+        </p>
 
-                    <button disabled={!email || !password || loading} type="submit" className="btn btn-block btn-primary">
-                        {
-                            loading ? <SyncOutlined spin /> : 'Submit'
-                        }
-                    </button>
-
-                </form>
-
-                <p className="text-center pt-3">
-                    Haven't registered yet? {" "}
-                    <Link href="/register"><a>Register Now</a></Link>
-                </p>
-
-                <p className="text-center">
-                    <Link href="/forgot-password"><a className="text-danger">Forgot Password</a></Link>
-                </p>
-
-            </div>
-
-        </>
-    )
-}
+        <p className="text-center">
+          <Link href="/forgot-password">
+            <a className="text-danger">Forgot password</a>
+          </Link>
+        </p>
+      </div>
+    </>
+  );
+};
 
 export default Login;
