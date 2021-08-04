@@ -6,6 +6,7 @@ import InstructorRoute from './../../../../components/routes/InstructorRoute';
 import CourseCreateForm from './../../../../components/forms/CourseCreateForm';
 import { useRouter } from 'next/router';
 import { Avatar, List } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 const { Item } = List;
 
@@ -33,7 +34,7 @@ const CreateEdit = () => {
 
         const { data } = await axios.get(`/api/course/${slug}`);
 
-        if(data) setValues(data);
+        if (data) setValues(data);
 
         if (data && data.image) setImage(data.image);
 
@@ -142,6 +143,25 @@ const CreateEdit = () => {
         toast('Lessons have been reordered successfully!');
     }
 
+    const handleDelete = async (index) => {
+
+        const answer = window.confirm('Are you sure you want to delete?');
+
+        if (!answer) return;
+
+        let allLessons = values.lessons;
+
+        const removed = allLessons.splice(index, 1);
+
+        setValues({ ...values, lessons: allLessons });
+
+        // Send to server-side
+        const { data } = await axios.put(`/api/course/${removed[0]._id}`);
+
+        console.log(data);
+
+    }
+
     return (
         <InstructorRoute>
 
@@ -182,6 +202,8 @@ const CreateEdit = () => {
                                 <Item.Meta title={item.title} avatar={<Avatar>{index + 1}</Avatar>}>
 
                                 </Item.Meta>
+
+                                <DeleteOutlined className="text-danger float-right" onClick={() => handleDelete(index)} />
                             </Item>
                         )}
                     >
