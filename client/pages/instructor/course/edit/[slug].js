@@ -5,8 +5,9 @@ import Resizer from 'react-image-file-resizer';
 import InstructorRoute from './../../../../components/routes/InstructorRoute';
 import CourseCreateForm from './../../../../components/forms/CourseCreateForm';
 import { useRouter } from 'next/router';
-import { Avatar, List } from 'antd';
+import { Avatar, List, Modal } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
+import UpdateLessonForm from './../../../../components/forms/UpdateLessonForm';
 
 const { Item } = List;
 
@@ -26,6 +27,14 @@ const CreateEdit = () => {
     const [image, setImage] = useState('');
     const [preview, setPreview] = useState('');
     const [uploadButtonText, setUploadButtonText] = useState('Upload Image');
+
+    // Lesson Update States
+    const [visible, setVisible] = useState(false);
+    const [current, setCurrent] = useState({});
+    const [uploadVideoButtonText, setUploadVideoButtonText] = useState('Upload Video');
+    const [progress, setProgress] = useState(0);
+    const [uploading, setUploading] = useState(false);
+
 
     const router = useRouter();
     const { slug } = router.query;
@@ -162,6 +171,14 @@ const CreateEdit = () => {
 
     }
 
+    const handleVideo = () => {
+
+    }
+
+    const handleUpdateLesson = () => {
+
+    }
+
     return (
         <InstructorRoute>
 
@@ -199,8 +216,14 @@ const CreateEdit = () => {
                                 onDragStart={e => handleDrag(e, index)}
                                 onDrop={e => handleDrop(e, index)}
                             >
-                                <Item.Meta title={item.title} avatar={<Avatar>{index + 1}</Avatar>}>
-
+                                <Item.Meta
+                                    onClick={() => {
+                                        setVisible(true)
+                                        setCurrent(item);
+                                    }}
+                                    title={item.title}
+                                    avatar={<Avatar>{index + 1}</Avatar>}
+                                >
                                 </Item.Meta>
 
                                 <DeleteOutlined className="text-danger float-right" onClick={() => handleDelete(index)} />
@@ -212,6 +235,24 @@ const CreateEdit = () => {
 
                 </div>
             </div>
+
+            <Modal
+                title="Update Lesson"
+                visible={visible}
+                centered
+                onCancel={() => setVisible(false)}
+                footer={null}
+            >
+                <UpdateLessonForm
+                    current={current}
+                    progress={progress}
+                    uploading={uploading}
+                    setCurrent={setCurrent}
+                    handleVideo={handleVideo}
+                    handleUpdateLesson={handleUpdateLesson}
+                    uploadVideoButtonText={uploadVideoButtonText}
+                />
+            </Modal>
 
         </InstructorRoute>
     )
