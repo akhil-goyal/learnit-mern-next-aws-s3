@@ -73,35 +73,16 @@ const CreateEdit = () => {
 
     }
 
-    const handleImageRemove = async () => {
-
-        try {
-
-            setValues({ ...values, loading: true });
-
-            const res = await axios.post(`/api/course/remove-image`, { image });
-
-            setImage({});
-            setPreview('');
-            setUploadButtonText('Upload Image');
-            setValues({ ...values, loading: false });
-
-        } catch (err) {
-            setValues({ ...values, loading: false });
-            toast('Image Upload Failed! Try again...');
-        }
-    }
-
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
         try {
-            const { data } = await axios.post(`/api/course`, {
+            const { data } = await axios.put(`/api/course`, {
                 ...values, image
             });
-            toast('Awesome! Now you can start adding lessons...');
-            router.push('/instructor');
+            toast('Course Updated!');
+            // router.push('/instructor');
         } catch (err) {
             toast(err.response.data);
         }
@@ -122,7 +103,7 @@ const CreateEdit = () => {
                     setValues={setValues}
                     preview={preview}
                     uploadButtonText={uploadButtonText}
-                    handleImageRemove={handleImageRemove}
+                    editPage={true}
                 />
             </div>
 
