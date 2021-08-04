@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import InstructorRoute from './../../../../components/routes/InstructorRoute';
-import { Avatar, Tooltip, Button, Modal } from 'antd';
+import { Avatar, Tooltip, Button, Modal, List } from 'antd';
 import { EditOutlined, CheckOutlined, UploadOutlined } from '@ant-design/icons';
 import ReactMarkdown from 'react-markdown';
 import AddLessonForm from './../../../../components/forms/AddLessonForm';
@@ -20,7 +20,6 @@ const CourseView = () => {
         content: '',
         video: {}
     });
-
 
     const router = useRouter();
 
@@ -126,7 +125,7 @@ const CourseView = () => {
                                 </div>
 
                                 <div className="d-flex pt-4">
-                                    <Tooltip title="Edit"><EditOutlined className="h5 pointer text-warning mr-4" /></Tooltip>
+                                    <Tooltip onClick={() => router.push(`instructor/course/edit/:${slug}`)} title="Edit"><EditOutlined className="h5 pointer text-warning mr-4" /></Tooltip>
                                     <Tooltip title="Publish"><CheckOutlined className="h5 pointer text-danger" /></Tooltip>
                                 </div>
 
@@ -169,6 +168,26 @@ const CourseView = () => {
                             handleVideoRemove={handleVideoRemove}
                         />
                     </Modal>
+
+                    <div className="row pb5">
+                        <div className="col lesson-list">
+
+                            <h4>{course && course.lessons && course.lessons.length} Lessons</h4>
+
+                            <List
+                                itemLayout="horizontal"
+                                dataSource={course && course.lessons}
+                                renderItem={(item, index) => (<Item>
+                                    <Item.Meta title={item.title} avatar={<Avatar>{index + 1}</Avatar>}>
+
+                                    </Item.Meta>
+                                </Item>)}
+                            >
+
+                            </List>
+
+                        </div>
+                    </div>
 
                 </div>}
             </div>

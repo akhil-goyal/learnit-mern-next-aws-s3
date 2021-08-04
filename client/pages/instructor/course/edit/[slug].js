@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Resizer from 'react-image-file-resizer';
-import InstructorRoute from './../../../components/routes/InstructorRoute';
-import CourseCreateForm from './../../../components/forms/CourseCreateForm';
+import InstructorRoute from './../../../../components/routes/InstructorRoute';
+import CourseCreateForm from './../../../../components/forms/CourseCreateForm';
 import { useRouter } from 'next/router';
 
-const CreateCourse = () => {
+const CreateEdit = () => {
 
     const [values, setValues] = useState({
         name: '',
@@ -23,6 +23,19 @@ const CreateCourse = () => {
     const [uploadButtonText, setUploadButtonText] = useState('Upload Image');
 
     const router = useRouter();
+    const { slug } = router.query;
+
+    const loadCourse = async () => {
+
+        const { data } = await axios.get(`/api/course/${slug}`);
+
+        setValues(data);
+
+    }
+
+    useEffect(() => {
+        loadCourse();
+    }, [slug]);
 
     const handleChange = (e) => {
 
@@ -98,7 +111,7 @@ const CreateCourse = () => {
     return (
         <InstructorRoute>
 
-            <h1 className="jumbotron text-center square">Create Course</h1>
+            <h1 className="jumbotron text-center square">Update Course</h1>
 
             <div className="pt-3 pb-3">
                 <CourseCreateForm
@@ -119,4 +132,4 @@ const CreateCourse = () => {
     )
 }
 
-export default CreateCourse;
+export default CreateEdit;
