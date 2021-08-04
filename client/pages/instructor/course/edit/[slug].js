@@ -5,6 +5,9 @@ import Resizer from 'react-image-file-resizer';
 import InstructorRoute from './../../../../components/routes/InstructorRoute';
 import CourseCreateForm from './../../../../components/forms/CourseCreateForm';
 import { useRouter } from 'next/router';
+import { Avatar, List } from 'antd';
+
+const { Item } = List;
 
 const CreateEdit = () => {
 
@@ -16,6 +19,7 @@ const CreateEdit = () => {
         uploading: false,
         paid: true,
         loading: false,
+        lessons: []
     });
 
     const [image, setImage] = useState('');
@@ -29,7 +33,9 @@ const CreateEdit = () => {
 
         const { data } = await axios.get(`/api/course/${slug}`);
 
-        setValues(data);
+        if(data) setValues(data);
+
+        if (data && data.image) setImage(data.image);
 
     }
 
@@ -73,12 +79,31 @@ const CreateEdit = () => {
 
     }
 
+    const handleImageRemove = async () => {
+
+        try {
+
+            setValues({ ...values, loading: true });
+
+            const res = await axios.post(`/api/course/remove-image`, { image });
+
+            setImage({});
+            setPreview('');
+            setUploadButtonText('Upload Image');
+            setValues({ ...values, loading: false });
+
+        } catch (err) {
+            setValues({ ...values, loading: false });
+            toast('Image Upload Failed! Try again...');
+        }
+    }
+
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
         try {
-            const { data } = await axios.put(`/api/course`, {
+            const { data } = await axios.put(`/api/course/${slug}`, {
                 ...values, image
             });
             toast('Course Updated!');
@@ -87,6 +112,34 @@ const CreateEdit = () => {
             toast(err.response.data);
         }
 
+    }
+
+    const handleDrag = (e, index) => {
+
+        e.dataTransfer.setData('itemIndex', index);
+
+    }
+
+    const handleDrop = async (e, index) => {
+
+        const movingItemIndex = e.dataTransfer.getData('itemIndex');
+        const targetItemIndex = index;
+
+        let allLessons = values.lessons;
+
+        let movingItem = allLessons[movingItemIndex];
+
+        allLessons.splice(movingItemIndex, 1);
+        allLessons.splice(targetItemIndex, 0, movingItem);
+
+        setValues({ ...values, lessons: [...allLessons] });
+
+        // Save the new odered list in DB
+        const { data } = await axios.put(`/api/course/${slug}`, {
+            ...values, image
+        });
+
+        toast('Lessons have been reordered successfully!');
     }
 
     return (
@@ -99,6 +152,7 @@ const CreateEdit = () => {
                     handleSubmit={handleSubmit}
                     handleImage={handleImage}
                     handleChange={handleChange}
+                    handleImageRemove={handleImageRemove}
                     values={values}
                     setValues={setValues}
                     preview={preview}
@@ -107,7 +161,35 @@ const CreateEdit = () => {
                 />
             </div>
 
-            <pre>{JSON.stringify(values, null, 4)}</pre>
+            <hr />
+
+            <div className="row pb5">
+
+                <div className="col lesson-list">
+
+                    <h4>{values && values.lessons && values.lessons.length} Lessons</h4>
+
+                    <List
+                        onDragOver={(e) => e.preventDefault()}
+                        itemLayout="horizontal"
+                        dataSource={values && values.lessons}
+                        renderItem={(item, index) => (
+                            <Item
+                                draggable
+                                onDragStart={e => handleDrag(e, index)}
+                                onDrop={e => handleDrop(e, index)}
+                            >
+                                <Item.Meta title={item.title} avatar={<Avatar>{index + 1}</Avatar>}>
+
+                                </Item.Meta>
+                            </Item>
+                        )}
+                    >
+
+                    </List>
+
+                </div>
+            </div>
 
         </InstructorRoute>
     )

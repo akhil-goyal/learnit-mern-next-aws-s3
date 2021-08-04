@@ -205,13 +205,36 @@ export const addLesson = async (req, res) => {
 
         const updated = await Course.findOneAndUpdate({ slug }, {
             $push: { lessons: { title, content, video, slug: slugify(title) } }
-        }, {new : true}).populate('instructor', '_id name').exec();
+        }, { new: true }).populate('instructor', '_id name').exec();
 
         res.json(updated);
 
     } catch (err) {
         console.log(err);
         return res.status(400).send('Add Lesson Failed!');
+    }
+
+}
+
+export const update = async (req, res) => {
+
+    try {
+
+        const { slug } = req.params;
+
+        const course = await Course.findOne({ slug }).exec();
+
+        if (req.user._id != course.instructor) {
+            return res.status(400).send('Unauthorized!');
+        }
+
+        const updated = await Course.findOneAndUpdate({ slug }, req.body, { new: true }).exec();
+
+        res.json(updated);
+
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send(err.message);
     }
 
 }

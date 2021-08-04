@@ -8,6 +8,8 @@ import ReactMarkdown from 'react-markdown';
 import AddLessonForm from './../../../../components/forms/AddLessonForm';
 import { toast } from 'react-toastify';
 
+const { Item } = List;
+
 const CourseView = () => {
 
     const [course, setCourse] = useState({});
